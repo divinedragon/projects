@@ -86,7 +86,6 @@
               socket.close();
               window.chat = undefined;
               document.getElementsByTagName("form")[0].style.display = "none";
-
             } else if (data.status === "active") {
               addMessageToChatHistory(data.data, false);
             }
