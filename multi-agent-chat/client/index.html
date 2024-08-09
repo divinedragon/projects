@@ -12,7 +12,6 @@
     />
   </head>
   <body>
-    <!-- Content goes here -->
     <h1 class="text-center">Chat Client</h1>
     <div class="container text-center">
       <button id="start-chat-button" type="button" class="btn btn-primary">
@@ -28,7 +27,7 @@
         id="chat-history"
         style="border: 3px solid #ccc; border-radius: 20px; min-height: 500px"
       ></div>
-      <form style="margin-top: 20px">
+      <form style="margin-top: 20px" action="#">
         <div class="container">
           <div class="row">
             <div class="col-11">
@@ -50,6 +49,18 @@
       </form>
     </div>
 
+    <!-- Message Bubbles in the form of Buttons -->
+    <div style="display: none">
+      <div id="client-button" class="row" style="padding: 10px">
+        <div class="col-4"><button type="button" class="btn btn-outline-secondary" disabled></button></div>
+        <div class="col-8">&nbsp;</div>
+      </div>
+      <div id="server-button" class="row" style="padding: 10px;">
+        <div class="col-8">&nbsp;</div>
+        <div class="col-4"><button type="button" class="btn btn-outline-primary" disabled style="float:right"></button></div>
+      </div>
+    </div>
+
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
@@ -68,18 +79,13 @@
           };
 
           socket.addEventListener("open", (event) => {
-            console.log("Connected to server", event.data, event);
-
             document.getElementById("start-chat-button").style.display = "none";
             document.getElementById("chat-container").style.display = "block";
           });
 
           socket.addEventListener("message", (event) => {
-            console.log("Message from server", event.data);
 
             const data = JSON.parse(event.data);
-
-            console.log("Message from Server", data);
 
             if (data.status === "terminated") {
               addMessageToChatHistory("Chat Terminated", false);
@@ -108,7 +114,6 @@
           input.value = "";
           const payload = JSON.stringify({ id: window.chat.id, data });
           window.chat.socket.send(payload);
-          console.log("Message sent");
           addMessageToChatHistory(data, true);
         });
 
@@ -116,17 +121,21 @@
         .getElementById("start-chat-button")
         .addEventListener("click", (event) => {
           event.preventDefault();
-          console.log("Starting chat...");
           startChat();
         });
 
       function addMessageToChatHistory(message, isClient) {
+
         const chatHistory = document.getElementById("chat-history");
-        if (!isClient) {
-          chatHistory.innerHTML += `<div class="row" style="padding: 10px"><div class="col-8">&nbsp;</div><div class="col-4"><button type="button" class="btn btn-outline-primary" disabled style="float:right">${message}</button></div></div>`;
-        } else {
-          chatHistory.innerHTML += `<div class="row" style="padding: 10px"><div class="col-4"><button type="button" class="btn btn-outline-secondary" disabled>${message}</button></div><div class="col-8">&nbsp;</div></div>`;
-        }
+
+        const buttonId = isClient ? "client-button" : "server-button";
+        const buttonText = isClient ? `${message} 👉` : `👈 ${message}`;
+
+        var serverMessage = document.getElementById(buttonId).cloneNode(true);
+
+        serverMessage.querySelector("button").innerText = buttonText;
+
+        chatHistory.appendChild(serverMessage);
       }
     </script>
   </body>
