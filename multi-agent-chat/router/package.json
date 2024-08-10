@@ -2,12 +2,12 @@
   "name": "router",
   "version": "1.0.0",
   "description": "Chat Router",
+  "author": "Deepak Shakya",
+  "license": "GPL-3.0-only",
   "main": "index.js",
   "scripts": {
     "test": "test"
   },
-  "author": "Deepak Shakya",
-  "license": "GPL-3.0-only",
   "dependencies": {
     "express": "^4.19.2",
     "express-ws": "^5.0.2",
