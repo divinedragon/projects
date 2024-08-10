@@ -74,7 +74,7 @@ app.get("/async-chat-messages", (req, res) => {
   const connection_id = req.query.id;
   const data = req.query.data;
 
-  logger.info("Async Message for Client[%s] -> QueryParams[%s], Data[%s]", connection_id, req.query, data);
+  logger.info("Async Message for Client[%s] -> Data[%s]", connection_id, data);
 
   const ws = open_connections[connection_id];
   if (ws) {
@@ -83,7 +83,7 @@ app.get("/async-chat-messages", (req, res) => {
     ws.send(response);
     res.json({ success: true }).send();
   } else {
-    logger.warn("Cannot sending Async Message to Client[%s] - No connection found with Id[%s]", connection_id, connection_id);
+    logger.warn("Cannot send Async Message to Client[%s] - No connection found with Id[%s]", connection_id, connection_id);
     res.status(404).json({ status: false, message: "No connection found for connection_id: " + connection_id }).send();
   }
 });
@@ -93,7 +93,7 @@ app.get("/async-chat-termination", (req, res) => {
   const connection_id = req.query.id;
   const reason = req.query.reason;
 
-  logger.info("Async Termination for Client[%s] -> QueryParams[%s], Reason[%s]", connection_id, req.query, reason);
+  logger.info("Async Termination for Client[%s] -> Reason[%s]", connection_id, reason);
 
   const ws = open_connections[connection_id];
 
