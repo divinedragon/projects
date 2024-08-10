@@ -81,6 +81,7 @@
           socket.addEventListener("open", (event) => {
             document.getElementById("start-chat-button").style.display = "none";
             document.getElementById("chat-container").style.display = "block";
+            document.getElementsByTagName("form")[0].style.display = "";
           });
 
           socket.addEventListener("message", (event) => {
@@ -88,10 +89,11 @@
             const data = JSON.parse(event.data);
 
             if (data.status === "terminated") {
-              addMessageToChatHistory("Chat Terminated", false);
+              addMessageToChatHistory("Chat Terminated - " + data.data, false);
               socket.close();
               window.chat = undefined;
               document.getElementsByTagName("form")[0].style.display = "none";
+              document.getElementById("start-chat-button").style.display = "";
             } else if (data.status === "active") {
               addMessageToChatHistory(data.data, false);
             }
@@ -121,6 +123,7 @@
         .getElementById("start-chat-button")
         .addEventListener("click", (event) => {
           event.preventDefault();
+          document.getElementById("chat-history").innerHTML = "";
           startChat();
         });
 
